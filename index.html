@@ -168,6 +168,47 @@
             margin-right: 8px;
         }
 
+        .quick-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-btn {
+            padding: 8px 16px;
+            background-color: var(--secondary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .option-btn.selected {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-btn:active {
+            transform: translateY(0);
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 15px;
@@ -180,14 +221,37 @@
             button {
                 width: 100%;
             }
+
+            .quick-options {
+                padding: 10px;
+            }
+            
+            .option-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>阿里云函数调用测试</h1>
+    <h1>牛马狗的自嗨</h1>
     <div class="container">
         <input type="text" id="dataInput" placeholder="请输入数据">
         <button onclick="callFunction()">调用函数</button>
+    </div>
+    <div class="quick-options">
+        <button class="option-btn" onclick="setInput(this)">共享单车</button>
+        <button class="option-btn" onclick="setInput(this)">地铁</button>
+        <button class="option-btn" onclick="setInput(this)">公交车</button>
+        <button class="option-btn" onclick="setInput(this)">出租屋</button>
+        <button class="option-btn" onclick="setInput(this)">酒吧</button>
+        <button class="option-btn" onclick="setInput(this)">网吧</button>
+        <button class="option-btn" onclick="setInput(this)">看电影</button>
+        <button class="option-btn" onclick="setInput(this)">打游戏</button>
+        <button class="option-btn" onclick="setInput(this)">吃烧烤</button>
+        <button class="option-btn" onclick="setInput(this)">加班</button>
+        <button class="option-btn" onclick="setInput(this)">健身房</button>
+        <button class="option-btn" onclick="setInput(this)">奶茶店</button>
     </div>
     
     <div id="result">
@@ -291,6 +355,40 @@
                 document.getElementById('result').prepend(errorDiv);
             }
         }
+
+        function setInput(button) {
+            // 切换按钮选中状态
+            button.classList.toggle('selected');
+            
+            // 获取所有选中的按钮
+            const selectedButtons = document.querySelectorAll('.option-btn.selected');
+            const input = document.getElementById('dataInput');
+            
+            // 将选中按钮的文本组合成逗号分隔的字符串
+            const selectedTexts = Array.from(selectedButtons).map(btn => btn.textContent);
+            input.value = selectedTexts.join('，');
+        }
+
+        // 添加清空选择的函数
+        function clearSelection() {
+            const selectedButtons = document.querySelectorAll('.option-btn.selected');
+            selectedButtons.forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('dataInput').value = '';
+        }
+
+        // 在输入框值改变时检查并更新按钮状态
+        document.getElementById('dataInput').addEventListener('input', function() {
+            const selectedValues = this.value.split('，').map(v => v.trim()).filter(v => v);
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach(btn => {
+                if (selectedValues.includes(btn.textContent)) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        });
     </script>
 </body>
 </html> 
