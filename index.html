@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牛马猫的一天</title>
+    <style>
+        :root {
+            --primary-color: #FFB6C1;
+            --secondary-color: #FFF0F5;
+            --accent-color: #FF69B4;
+            --text-color: #4A4A4A;
+            --border-radius: 15px;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #FFF5EE;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        h1::before, h1::after {
+            content: '🐱';
+            margin: 0 10px;
+            font-size: 0.8em;
+        }
+
+        .container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            background-color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        input {
+            padding: 12px;
+            flex: 1;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 8px rgba(255, 105, 180, 0.2);
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #result {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .content-section {
+            background-color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .content-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section h2 {
+            color: var(--accent-color);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .content-section h2::before {
+            margin-right: 8px;
+        }
+
+        #imageContainer h2::before {
+            content: '🖼️';
+        }
+
+        #textContainer h2::before {
+            content: '📝';
+        }
+
+        #audioContainer h2::before {
+            content: '🎵';
+        }
+
+        #imageContainer img {
+            max-width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        #imageContainer img:hover {
+            transform: scale(1.02);
+        }
+
+        #textContainer {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            line-height: 1.8;
+        }
+
+        #audioContainer audio {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .error {
+            color: #FF4D4F;
+            padding: 15px;
+            background-color: #FFF1F0;
+            border: 1px solid #FFCCC7;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .error::before {
+            content: '⚠️';
+            margin-right: 8px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>阿里云函数调用测试</h1>
+    <div class="container">
+        <input type="text" id="dataInput" placeholder="请输入数据">
+        <button onclick="callFunction()">调用函数</button>
+    </div>
+    
+    <div id="result">
+        <div id="imageContainer" class="content-section">
+            <h2>图片内容</h2>
+        </div>
+        <div id="textContainer" class="content-section">
+            <h2>文本内容</h2>
+        </div>
+        <div id="audioContainer" class="content-section">
+            <h2>音频内容</h2>
+        </div>
+    </div>
+
+    <script>
+        async function callFunction() {
+            const input = document.getElementById('dataInput').value;
+            const imageContainer = document.getElementById('imageContainer');
+            const textContainer = document.getElementById('textContainer');
+            const audioContainer = document.getElementById('audioContainer');
+            
+            // 重置内容
+            imageContainer.innerHTML = '<h2>图片内容</h2>';
+            textContainer.innerHTML = '<h2>文本内容</h2>';
+            audioContainer.innerHTML = '<h2>音频内容</h2>';
+            
+            try {
+                const response = await fetch(`https://niuma-jhblqxyils.cn-hangzhou.fcapp.run?data=${encodeURIComponent(input)}`, {
+                    method: 'GET'
+                });
+                
+                const rawData = await response.text();
+                console.log('原始返回数据:', rawData); // 添加调试日志
+                
+                // 解析返回的数据
+                const lines = rawData.split('\n');
+                let pic = '', text = '', mp3Link = '';
+                
+                lines.forEach(line => {
+                    if (line.includes('"pic":')) {
+                        pic = line.split('"pic":')[1].trim().replace(/["]/g, '').replace(',', '');
+                    } else if (line.includes('"text":')) {
+                        text = line.split('"text":')[1].trim().replace(/^"|"$/g, '').replace(',', '');
+                    } else if (line.includes('"mp3":')) {
+                        try {
+                            // 提取mp3部分的JSON字符串
+                            let mp3String = line.split('"mp3":')[1].trim();
+                            // 移除开头和结尾的引号和单引号
+                            mp3String = mp3String.replace(/^["']|['"]$/g, '');
+                            console.log('MP3字符串:', mp3String); // 添加调试日志
+                            
+                            // 解析JSON
+                            const mp3Json = JSON.parse(mp3String);
+                            mp3Link = mp3Json.link;
+                            console.log('解析后的MP3链接:', mp3Link); // 添加调试日志
+                        } catch (e) {
+                            console.error('解析MP3数据出错:', e);
+                            // 在页面上显示错误信息
+                            const errorP = document.createElement('p');
+                            errorP.style.color = 'red';
+                            errorP.textContent = `音频解析错误: ${e.message}`;
+                            audioContainer.appendChild(errorP);
+                        }
+                    }
+                });
+
+                // 显示图片
+                if (pic) {
+                    const img = document.createElement('img');
+                    img.src = pic;
+                    img.alt = '返回的图片';
+                    imageContainer.appendChild(img);
+                }
+
+                // 显示文本
+                if (text) {
+                    const p = document.createElement('p');
+                    p.textContent = text;
+                    textContainer.appendChild(p);
+                }
+
+                // 显示音频
+                if (mp3Link) {
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = mp3Link;
+                    audioContainer.appendChild(audio);
+                    
+                    // 添加音频链接显示
+                    const linkP = document.createElement('p');
+                    linkP.style.fontSize = '12px';
+                    linkP.style.wordBreak = 'break-all';
+                    linkP.textContent = `音频链接: ${mp3Link}`;
+                    audioContainer.appendChild(linkP);
+                }
+
+            } catch (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = `错误: ${error.message}`;
+                document.getElementById('result').prepend(errorDiv);
+            }
+        }
+    </script>
+</body>
+</html> 
